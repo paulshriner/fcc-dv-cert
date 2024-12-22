@@ -1,3 +1,19 @@
+body {
+    text-align: center;
+}
+
+svg {
+    border: 1px dashed black;
+}
+
+.bar:hover {
+    fill: lightblue;
+}
+
 #tooltip {
+    position: absolute;
+    top: 250px;
+    left: 35%;
     white-space: pre-line;
+    transition: 0.5s;
 }

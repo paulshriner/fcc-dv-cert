@@ -80,10 +80,10 @@ const getQuarter = date => {
         return "Q2";
     }
     if (month < 10) {
-        return "Q4";
+        return "Q3";
     }
     if (month < 13) {
-        return "Q5";
+        return "Q4";
     }
 
     return month;
