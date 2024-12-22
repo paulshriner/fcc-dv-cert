@@ -7,6 +7,7 @@ const graph = document.getElementById("graph");
 // Graph constants
 const w = 800;
 const h = 500;
+const padding = 50;
 
 const svg = d3.select(graph)
               .append("svg")
@@ -23,10 +24,25 @@ fetch(url)
     // define x and y scales
     const xScale = d3.scaleLinear()
                      .domain([d3.min(points, d => getYear(d[0])), d3.max(points, d => getYear(d[0]))])
-                     .range([0, w]);
+                     .range([padding, w - padding]);
     const yScale = d3.scaleLinear()
                      .domain([0, d3.max(points, d => d[1])])
-                     .range([h, 0]);
+                     .range([h - padding, padding]);
+
+    // functions to create axis
+    const xAxis = d3.axisBottom(xScale)
+                    .tickFormat(d3.format(".0f"));
+    const yAxis = d3.axisLeft(yScale);
+
+    // add axis to svg
+    svg.append("g")
+       .attr("transform", "translate(0," + (h - padding) + ")")
+       .call(xAxis)
+       .attr("id", "x-axis");
+    svg.append("g")
+       .attr("transform", "translate(" + padding + ",0)")
+       .call(yAxis)
+       .attr("id", "y-axis");
             
     // add rect for each point
     svg.selectAll("rect")
@@ -36,8 +52,10 @@ fetch(url)
        .attr("x", d => xScale(getYear(d[0])))
        .attr("y", d => yScale(d[1]))
        .attr("width", 12)
-       .attr("height", d => d[1])
-       .attr("class", "bar");
+       .attr("height", d => d[1] / 45.21)
+       .attr("class", "bar")
+       .attr("data-date", d => d[0])
+       .attr("data-gdp", d => d[1]);
 });
 
 // extract year from date with format "YYYY-MM-DD"
