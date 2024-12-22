@@ -9,6 +9,12 @@ const w = 800;
 const h = 500;
 const padding = 50;
 
+// create tooltip element
+d3.select(graph)
+  .append("div")
+  .attr("id", "tooltip");
+
+// create svg element
 const svg = d3.select(graph)
               .append("svg")
               .attr("width", w)
@@ -55,7 +61,9 @@ fetch(url)
        .attr("height", d => d[1] / 45.21)
        .attr("class", "bar")
        .attr("data-date", d => d[0])
-       .attr("data-gdp", d => d[1]);
+       .attr("data-gdp", d => d[1])
+       .on("mouseover", d => updateTooltip(d.explicitOriginalTarget["__data__"]))
+       .on("mouseout", d => hideTooltip());
 });
 
 // extract year from date with format "YYYY-MM-DD"
@@ -79,4 +87,18 @@ const getQuarter = date => {
     }
 
     return month;
+}
+
+// updates tooltip element with information from bar, takes an individual array of date and GDP
+const updateTooltip = bar => {
+    d3.select("#tooltip")
+    .attr("data-date", bar[0])
+    .style("opacity", 1)
+    .text(getYear(bar[0]) + " " + getQuarter(bar[0]) + "\n$" + bar[1] + " Billion");    
+}
+
+// hides tooltip by setting opacity to 0
+const hideTooltip = () => {
+    d3.select("#tooltip")
+    .style("opacity", 0);
 }
