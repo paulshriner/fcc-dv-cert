@@ -8,13 +8,17 @@ const graph = document.getElementById("graph");
 const w = 800;
 const h = 500;
 const r = 5;
-const padding = 50;
+const padding = 60;
 
 // create svg element
 const svg = d3.select(graph)
               .append("svg")
               .attr("width", w)
               .attr("height", h);
+
+// Thanks https://forum.freecodecamp.org/t/data-visualization-projects-visualize-data-with-a-scatterplot-graph/607807 for help with timeParse and timeFormat
+const parse = d3.timeParse("%M:%S");
+const format = d3.timeFormat("%M:%S");
 
 // Use fetch to get JSON data
 fetch(url)
@@ -24,15 +28,15 @@ fetch(url)
     const xScale = d3.scaleLinear()
                      .domain([d3.min(data, d => d["Year"]) - 1, d3.max(data, d => d["Year"]) + 1])
                      .range([padding, w - padding]);
-    const yScale = d3.scaleLinear()
-                     .domain([d3.max(data, d => d["Seconds"]), d3.min(data, d => d["Seconds"])])
+    const yScale = d3.scaleTime()
+                     .domain([d3.max(data, d => parse(d["Time"])), d3.min(data, d => parse(d["Time"]))])
                      .range([h - padding, padding]);
 
     // functions to create axis
     const xAxis = d3.axisBottom(xScale)
                     .tickFormat(d3.format(".0f"));
     const yAxis = d3.axisLeft(yScale)
-                    .tickFormat(d => format(d));
+                    .tickFormat(format);
 
     // add axis to svg
     svg.append("g")
@@ -50,26 +54,9 @@ fetch(url)
        .enter()
        .append("circle")
        .attr("cx", d => xScale(d["Year"]))
-       .attr("cy", d => yScale(d["Seconds"]))
+       .attr("cy", d => yScale(parse(d["Time"])))
        .attr("r", r)
        .attr("class", "dot")
        .attr("data-xvalue", d => d["Year"])
-       .attr("data-yvalue", d => d["Seconds"]);
+       .attr("data-yvalue", d => parse(d["Time"]));
 });
-
-// Thanks https://stackoverflow.com/questions/61791234/how-to-display-countdown-timer-in-react for time formatting
-// Pads a zero if the digit is one (less than 10)
-const padTime = time => {
-    return time < 10 ? `0${time}` : `${time}`;
-}
-
-const format = time => {
-    // Gets minutes using integer division
-    const minutes = Math.floor(time / 60);
-
-    // Get remainder seconds
-    const seconds = time % 60;
-
-    // Return formatted sring using padTime for seconds
-    return `${padTime(minutes)}:${padTime(seconds)}`;
-}
