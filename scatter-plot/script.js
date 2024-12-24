@@ -38,15 +38,26 @@ fetch(url)
     const yAxis = d3.axisLeft(yScale)
                     .tickFormat(format);
 
-    // add axis to svg
+    // add x axis to svg
     svg.append("g")
        .attr("transform", "translate(0," + (h - padding) + ")")
        .call(xAxis)
        .attr("id", "x-axis");
+    svg.append("text")
+       .text("Year")
+       .attr("x", 400)
+       .attr("y", 480);
+
+    // y axis
     svg.append("g")
        .attr("transform", "translate(" + padding + ",0)")
        .call(yAxis)
        .attr("id", "y-axis");
+    svg.append("text")
+       .text("Time in Minutes")
+       .attr("transform", "rotate(-90)")
+       .attr("x", -310)
+       .attr("y", 15);
 
     // plot points using year as x and time as y
     svg.selectAll("circle")
