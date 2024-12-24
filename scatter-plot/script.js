@@ -76,12 +76,14 @@ fetch(url)
        .attr("data-yvalue", d => parse(d["Time"]))
        .style("fill", d => d["Doping"] === "" && "lightgreen")
        .on("mouseover", (d, i) => {
+         // use rect for background color
          tooltip.append("rect")
                 .attr("x", xScale(i["Year"]) + 10)
                 .attr("y", yScale(parse(i["Time"])))
                 .attr("width", 310)
                 .attr("height", 70);
 
+         // text in tooltip
          tooltip.attr("data-year", i["Year"])
                 .style("opacity", 1)
                 .append("text")

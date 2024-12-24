@@ -1,3 +1,7 @@
+body {
+    text-align: center;
+}
+
 #tooltip {
     font-size: 10px;
     white-space: pre-line;
