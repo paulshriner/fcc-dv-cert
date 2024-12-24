@@ -78,7 +78,7 @@ fetch(url)
        .on("mouseover", (d, i) => {
          // use rect for background color
          tooltip.append("rect")
-                .attr("x", xScale(i["Year"]) + 10)
+                .attr("x", xScale(i["Year"]) + (xScale(i["Year"]) > 830 ? -315 : 10))
                 .attr("y", yScale(parse(i["Time"])))
                 .attr("width", 310)
                 .attr("height", 70);
@@ -88,7 +88,7 @@ fetch(url)
                 .style("opacity", 1)
                 .append("text")
                 .text(i["Name"] + ": " + i["Nationality"] + "\nYear: " + i["Year"] + ", Time: " + i["Time"] + "\n\n" + i["Doping"])
-                .attr("x", xScale(i["Year"]) + 10)
+                .attr("x", xScale(i["Year"]) + (xScale(i["Year"]) > 830 ? -315 : 10))
                 .attr("y", yScale(parse(i["Time"])) + 10);
        })
        .on("mouseleave", () => {
