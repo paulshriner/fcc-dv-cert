@@ -5,8 +5,8 @@ const url = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData
 const graph = document.getElementById("graph");
 
 // Graph constants
-const w = 800;
-const h = 500;
+const w = 1500;
+const h = 750;
 const r = 5;
 const padding = 60;
 
@@ -45,8 +45,8 @@ fetch(url)
        .attr("id", "x-axis");
     svg.append("text")
        .text("Year")
-       .attr("x", 405)
-       .attr("y", 475)
+       .attr("x", 770)
+       .attr("y", 725)
        .attr("id", "x-label")
        .style("font-size", "10px");
 
@@ -58,7 +58,7 @@ fetch(url)
     svg.append("text")
        .text("Time in Minutes")
        .attr("transform", "rotate(-90)")
-       .attr("x", -290)
+       .attr("x", -423)
        .attr("y", 15)
        .attr("id", "y-label")
        .style("font-size", "10px");
@@ -74,7 +74,27 @@ fetch(url)
        .attr("class", "dot")
        .attr("data-xvalue", d => d["Year"])
        .attr("data-yvalue", d => parse(d["Time"]))
-       .style("fill", d => d["Doping"] === "" && "lightgreen");
+       .style("fill", d => d["Doping"] === "" && "lightgreen")
+       .on("mouseover", (d, i) => {
+         tooltip.append("rect")
+                .attr("x", xScale(i["Year"]) + 10)
+                .attr("y", yScale(parse(i["Time"])))
+                .attr("width", 310)
+                .attr("height", 70);
+
+         tooltip.attr("data-year", i["Year"])
+                .style("opacity", 1)
+                .append("text")
+                .text(i["Name"] + ": " + i["Nationality"] + "\nYear: " + i["Year"] + ", Time: " + i["Time"] + "\n\n" + i["Doping"])
+                .attr("x", xScale(i["Year"]) + 10)
+                .attr("y", yScale(parse(i["Time"])) + 10);
+       })
+       .on("mouseleave", () => {
+         // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
+         tooltip.style("opacity", 0)
+                .select("text").remove();
+         tooltip.select("rect").remove();
+       });
 
     // create legend container
     const legend = svg.append("g")
@@ -83,29 +103,33 @@ fetch(url)
     // create no doping text
     legend.append("text")
           .text("No doping allegations")
-          .attr("x", 621)
+          .attr("x", 1321)
           .attr("y", 300)
           .style("font-size", "10px");
    
     // create no doping shape
     legend.append("rect")
-          .attr("x", 730)
-          .attr("y", 287)
+          .attr("x", 1430)
+          .attr("y", 289)
           .attr("width", 15)
           .attr("height", 15)
           .style("fill", "lightgreen");
 
-    // create no doping text
+    // create doping text
     legend.append("text")
           .text("Riders with doping allegations")
-          .attr("x", 580)
-          .attr("y", 320)
+          .attr("x", 1280)
+          .attr("y", 317)
           .style("font-size", "10px");
    
-    // create no doping shape
+    // create doping shape
     legend.append("rect")
-          .attr("x", 730)
+          .attr("x", 1430)
           .attr("y", 307)
           .attr("width", 15)
-          .attr("height", 15);   
+          .attr("height", 15);
+          
+    // create tooltip container
+    const tooltip = svg.append("g")
+                       .attr("id", "tooltip");
 });
