@@ -22,23 +22,24 @@ fetch(url)
 .then(data => {
     const points = data.monthlyVariance;
     const baseTemp = data.baseTemperature;
+    const years = [...new Set(points.map(d => d.year))];
     
     // set description text
     description.text(points[0].year + " - " + points[points.length - 1].year + ": base temperature " + baseTemp + "°C");
 
     // define x and y scales
-    const xScale = d3.scaleLinear()
-                     .domain([d3.min(points, d => d.year), d3.max(points, d => d.year)])
-                     .range([padding, w - padding]);
     // Thanks https://forum.freecodecamp.org/t/visualize-data-with-a-heat-map/230440/5 for scaleBand
-    // This makes it so the month ticks start halfway down the bar rather than at the top
+    // This makes it so the ticks start halfway in the bar rather than at the start
+    const xScale = d3.scaleBand()
+                     .domain(years)
+                     .range([padding, w - padding]);
     const yScale = d3.scaleBand()
                      .domain([12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
                      .range([h - padding, padding]);
 
     // functions to create axis
     const xAxis = d3.axisBottom(xScale)
-                    .tickFormat(d3.format(".0f"));
+                    .tickValues(years.filter(d => d % 10 === 0));
     const yAxis = d3.axisLeft(yScale)
                     .tickFormat(d => getMonth(d));
 
