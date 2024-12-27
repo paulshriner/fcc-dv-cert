@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choropleth Map</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container">
+        <h1 id="title">United States Educational Attainment</h1>
+        <h2 id="description">Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)</h2>
+        <div id="graph"></div>
+    </div>
+    <!-- D3 library from https://d3js.org/getting-started -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- topoJSON library from https://github.com/topojson/topojson-client -->
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="script.js"></script>
+    <!-- fCC library to do testing locally -->
+    <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
+</body>
+</html>
