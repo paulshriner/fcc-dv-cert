@@ -28,7 +28,7 @@ const getColor = (value) => {
 }
 
 // Choropleth map constants
-const cw = 1500;
+const cw = 1000;
 const ch = 750;
 const r = 5;
 const cpadding = 60;
@@ -110,5 +110,36 @@ Promise.all([
         .attr("class", "county")
         .attr("data-fips", d => d.id)
         .attr("data-education", d => data[0].filter(i => i.fips === d.id)[0].bachelorsOrHigher)
-        .attr("fill", d => getColor(data[0].filter(i => i.fips === d.id)[0].bachelorsOrHigher));
+        .attr("fill", d => getColor(data[0].filter(i => i.fips === d.id)[0].bachelorsOrHigher))
+        .on("mouseover", (d, i) => {
+            const info = data[0].filter(j => j.fips === i.id)[0];
+            const coordLength = Math.floor(i.geometry.coordinates[0].length / 2);
+            const x = i.geometry.coordinates[0][coordLength][0];
+            const y = i.geometry.coordinates[0][coordLength][1];
+            
+            // use rect for background color
+            tooltip.append("rect")
+                   .attr("x", x + (x > 850 ? -170 : 10))
+                   .attr("y", y)
+                   .attr("width", 170)
+                   .attr("height", 20);
+                   
+            // text in tooltip
+            tooltip.attr("data-education", info.bachelorsOrHigher)
+                   .style("opacity", 1)
+                   .append("text")
+                   .text(info.area_name + ", " + info.state + ": " + info.bachelorsOrHigher + "%")
+                   .attr("x", x + (x > 850 ? -170 : 10))
+                   .attr("y", y + 10);
+        })
+        .on("mouseleave", () => {
+            // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
+            tooltip.style("opacity", 0)
+                   .select("text").remove();
+            tooltip.select("rect").remove();
+        });
+
+    // create tooltip container
+    const tooltip = cSVG.append("g")
+                       .attr("id", "tooltip");
 });
