@@ -1,0 +1,22 @@
+body {
+    text-align: center;
+}
+
+#graph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#tooltip {
+    font-size: 10px;
+    white-space: pre-line;
+}
+
+#tooltip rect {
+    fill: black;
+}
+
+#tooltip text {
+    fill: white;
+}

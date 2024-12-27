@@ -147,7 +147,29 @@ fetch(url)
        .attr("data-month", d => d.month - 1)
        .attr("data-year", d => d.year)
        .attr("data-temp", d => d.variance + baseTemp)
-       .style("fill", d => getColor(d.variance, baseTemp));
+       .style("fill", d => getColor(d.variance, baseTemp))
+       .on("mouseover", (d, i) => {
+         // use rect for background color
+         tooltip.append("rect")
+                .attr("x", xScale(i.year) + (i.year > 2000 ? -100 : 10))
+                .attr("y", yScale(i.month))
+                .attr("width", 100)
+                .attr("height", 50);
+
+        // text in tooltip
+        tooltip.attr("data-year", i.year)
+               .style("opacity", 1)
+               .append("text")
+               .text(i.year + " - " + getMonth(i.month) + '\n' + Math.round((i.variance + baseTemp) * 10) / 10 + "°C\n" + Math.round(i.variance * 10) / 10 + "°C")
+               .attr("x", xScale(i.year) + (i.year > 2000 ? -100 : 10))
+               .attr("y", yScale(i.month) + 10);
+       })
+       .on("mouseleave", () => {
+        // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
+        tooltip.style("opacity", 0)
+               .select("text").remove();
+        tooltip.select("rect").remove();
+      });
 
     // add x axis to svg
     graphSVG.append("g")
@@ -173,4 +195,8 @@ fetch(url)
        .attr("y", 15)
        .attr("id", "y-label")
        .style("font-size", "10px");
+
+    // create tooltip container
+    const tooltip = graphSVG.append("g")
+                       .attr("id", "tooltip");
 })
