@@ -178,7 +178,7 @@ fetch(url)
        .attr("id", "x-axis");
     graphSVG.append("text")
        .text("Years")
-       .attr("x", 770)
+       .attr("x", 737)
        .attr("y", 725)
        .attr("id", "x-label")
        .style("font-size", "10px");
