@@ -149,13 +149,28 @@ fetch(url)
        .attr("data-temp", d => d.variance + baseTemp)
        .style("fill", d => getColor(d.variance, baseTemp));
 
-    // add axis to svg
+    // add x axis to svg
     graphSVG.append("g")
        .attr("transform", "translate(0," + (hh - padding) + ")")
        .call(xAxis)
        .attr("id", "x-axis");
+    graphSVG.append("text")
+       .text("Years")
+       .attr("x", 770)
+       .attr("y", 725)
+       .attr("id", "x-label")
+       .style("font-size", "10px");
+
+    // y axis
     graphSVG.append("g")
        .attr("transform", "translate(" + padding + ",0)")
        .call(yAxis)
        .attr("id", "y-axis");
+    graphSVG.append("text")
+       .text("Months")
+       .attr("transform", "rotate(-90)")
+       .attr("x", -393)
+       .attr("y", 15)
+       .attr("id", "y-label")
+       .style("font-size", "10px");
 })
