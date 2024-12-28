@@ -19,6 +19,10 @@ const tSVG = graph.append("svg")
                  .attr("width", tw)
                  .attr("height", th);
 
+// Color values for tree map
+// Used https://www.gigacalculator.com/randomizers/random-color-generator.php to generate color values
+const colors = ["#dd66ac", "#19cced", "#188723", "#3572e3", "#d2c1b1", "#f4477b", "#576168", "#de9473", "#f20681", "#250c7f", "#401269", "#d0ccba", "#6e4964", "#62e384", "#26c2c0", "#47ca7d", "#57e610", "#1dbb9f"];
+
 // Generates page for video games (also the default page)
 const videoGames = url => {
     // Add title, description
@@ -52,7 +56,7 @@ const uuidv4 = () => {
 
         return v.toString(16);
     });
-};
+}
 
 const renderPage = url => {
     // Use fetch to get JSON data
@@ -62,6 +66,10 @@ const renderPage = url => {
         // Thanks https://d3-graph-gallery.com/graph/treemap_json.html for help with tree map
         // Calculates size for each block
         let root = d3.hierarchy(data).sum(d => d.value);
+
+        // Used for colors of blocks
+        let color = -1;
+        let system = "";
 
         // Calculates position for each block
         d3.treemap()
@@ -83,7 +91,14 @@ const renderPage = url => {
             .attr("data-category", d => d.data.category)
             .attr("data-value", d => d.data.value)
             .style("stroke", "white")
-            .style("fill", "green");
+            .style("fill", d => {
+                if (d.data.category !== system) {
+                    ++color;
+                    system = d.data.category;
+                }
+
+                return colors[color];
+            });
 
         // Thanks https://webtips.dev/how-to-make-stunning-data-visualizations-with-d3-js for clipPath
         // This makes it so text cuts off at end of block instead of cutting into other blocks
