@@ -14,10 +14,20 @@ const tw = 1000;
 const th = 750;
 const tpadding = 60;
 
+// Legend constants
+const lw = 510;
+const lh = 180;
+
 // create svg element for tree map
 const tSVG = graph.append("svg")
                  .attr("width", tw)
                  .attr("height", th);
+
+// create svg element for legend
+const legendSVG = graph.append("svg")
+                       .attr("width", lw)
+                       .attr("height", lh)
+                       .attr("id", "legend");
 
 // Color values for tree map
 // Used https://www.gigacalculator.com/randomizers/random-color-generator.php to generate color values
@@ -30,6 +40,7 @@ const videoGames = url => {
     description.text("Top 100 Most Sold Video Games Grouped by Platform");
 
     // Render the tree map
+    cleanup();
     renderPage(url);
 }
 
@@ -38,6 +49,10 @@ const movies = url => {
     // Add title, description
     title.text("Movie Sales");
     description.text("Top 100 Highest Grossing Movies Grouped By Genre");
+
+    // Render the tree map
+    cleanup();
+    renderPage(url);
 }
 
 // Generates page for kickstarter
@@ -45,6 +60,10 @@ const kickstarter = url => {
     // Add title, description
     title.text("Kickstarter Pledges");
     description.text("Top 100 Most Pledged Kickstarter Campaigns Grouped By Category");
+
+    // Render the tree map
+    cleanup();
+    renderPage(url);
 }
 
 // Generates a random UUID
@@ -70,6 +89,8 @@ const renderPage = url => {
         // Used for colors of blocks
         let color = -1;
         let system = "";
+        let xLine = -1;
+        let yLine = 0;
 
         // Calculates position for each block
         d3.treemap()
@@ -92,9 +113,39 @@ const renderPage = url => {
             .attr("data-value", d => d.data.value)
             .style("stroke", "white")
             .style("fill", d => {
+                // Change color for different system
                 if (d.data.category !== system) {
                     ++color;
                     system = d.data.category;
+
+                    // Add color to legend
+                    legendSVG.append("g")
+                             .attr("id", "c" + color)
+                             .append("rect")
+                             .attr("y", () => {
+                                // have 3 items per line
+                                if (xLine >= 2) {
+                                    ++yLine;
+                                    xLine = -1;
+                                }
+
+                                return 30 * yLine;
+                             })
+                             .attr("x", () => {
+                                ++xLine;
+                                return xLine * 160;
+                             })
+                             .attr("width", 20)
+                             .attr("height", 20)
+                             .attr("class", "legend-item")
+                             .style("fill", colors[color]);
+
+                    // Add text to color
+                    legendSVG.select("#c" + color)
+                             .append("text")
+                             .attr("y", (30 * yLine) + 20)
+                             .attr("x", (xLine * 160) + 30)
+                             .text(system);
                 }
 
                 return colors[color];
@@ -122,6 +173,14 @@ const renderPage = url => {
             .attr("font-size", "12px")
             .attr("fill", "white");
     });
+}
+
+// Clean elements from svgs
+const cleanup = () => {
+    tSVG.selectAll("rect").remove();
+    tSVG.selectAll("clipPath").remove();
+    tSVG.selectAll("text").remove();
+    legendSVG.selectAll("g").remove();
 }
 
 // Actions for when page first loads
