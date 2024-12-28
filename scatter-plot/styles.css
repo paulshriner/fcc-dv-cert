@@ -3,10 +3,16 @@ body {
 }
 
 #tooltip {
-    font-size: 10px;
+    position: absolute;
+    width: 200px;
+    height: 110px;
+    font-size: 13px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
     white-space: pre-line;
-}
-
-#tooltip rect {
-    fill: lightgray;
+    pointer-events: none;
+    opacity: 0;
 }

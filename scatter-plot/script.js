@@ -2,7 +2,7 @@
 const url = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
 
 // References from HTML
-const graph = document.getElementById("graph");
+const graph = d3.select("#graph");
 
 // Graph constants
 const w = 1500;
@@ -11,10 +11,13 @@ const r = 5;
 const padding = 60;
 
 // create svg element
-const svg = d3.select(graph)
-              .append("svg")
-              .attr("width", w)
-              .attr("height", h);
+const svg = graph.append("svg")
+                 .attr("width", w)
+                 .attr("height", h);
+
+// create tooltip element
+const tooltip = graph.append("div")
+                     .attr("id", "tooltip");
 
 // Thanks https://forum.freecodecamp.org/t/data-visualization-projects-visualize-data-with-a-scatterplot-graph/607807 for help with timeParse and timeFormat
 const parse = d3.timeParse("%M:%S");
@@ -76,27 +79,14 @@ fetch(url)
        .attr("data-yvalue", d => parse(d["Time"]))
        .style("fill", d => d["Doping"] === "" && "lightgreen")
        .on("mouseover", (d, i) => {
-         // use rect for background color
-         tooltip.append("rect")
-                .attr("x", xScale(i["Year"]) + (xScale(i["Year"]) > 830 ? -315 : 10))
-                .attr("y", yScale(parse(i["Time"])))
-                .attr("width", 310)
-                .attr("height", 70);
-
          // text in tooltip
          tooltip.attr("data-year", i["Year"])
-                .style("opacity", 1)
-                .append("text")
                 .text(i["Name"] + ": " + i["Nationality"] + "\nYear: " + i["Year"] + ", Time: " + i["Time"] + "\n\n" + i["Doping"])
-                .attr("x", xScale(i["Year"]) + (xScale(i["Year"]) > 830 ? -315 : 10))
-                .attr("y", yScale(parse(i["Time"])) + 10);
+                .style("left", d.pageX + "px")
+                .style("top", d.pageY + "px")
+                .style("opacity", 0.9);
        })
-       .on("mouseleave", () => {
-         // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
-         tooltip.style("opacity", 0)
-                .select("text").remove();
-         tooltip.select("rect").remove();
-       });
+       .on("mouseleave", () => tooltip.style("opacity", 0));
 
     // create legend container
     const legend = svg.append("g")
@@ -130,8 +120,4 @@ fetch(url)
           .attr("y", 307)
           .attr("width", 15)
           .attr("height", 15);
-          
-    // create tooltip container
-    const tooltip = svg.append("g")
-                       .attr("id", "tooltip");
 });
