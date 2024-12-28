@@ -73,6 +73,10 @@ const cSVG = graph.append("svg")
                  .attr("width", cw)
                  .attr("height", ch);
 
+// create tooltip element
+const tooltip = graph.append("div")
+                     .attr("id", "tooltip");
+
 // Thanks https://stackoverflow.com/questions/59037553/fetch-multiple-urls-at-the-same-time for Promise.all
 // This allows fetching multiple urls at the same time
 Promise.all([
@@ -111,35 +115,23 @@ Promise.all([
         .attr("data-fips", d => d.id)
         .attr("data-education", d => data[0].filter(i => i.fips === d.id)[0].bachelorsOrHigher)
         .attr("fill", d => getColor(data[0].filter(i => i.fips === d.id)[0].bachelorsOrHigher))
-        .on("mouseover", (d, i) => {
+        .on("mousemove", (d, i) => {
             const info = data[0].filter(j => j.fips === i.id)[0];
             const coordLength = Math.floor(i.geometry.coordinates[0].length / 2);
             const x = i.geometry.coordinates[0][coordLength][0];
             const y = i.geometry.coordinates[0][coordLength][1];
-            
-            // use rect for background color
-            tooltip.append("rect")
-                   .attr("x", x + (x > 850 ? -170 : 10))
-                   .attr("y", y)
-                   .attr("width", 170)
-                   .attr("height", 20);
                    
             // text in tooltip
             tooltip.attr("data-education", info.bachelorsOrHigher)
-                   .style("opacity", 1)
-                   .append("text")
                    .text(info.area_name + ", " + info.state + ": " + info.bachelorsOrHigher + "%")
-                   .attr("x", x + (x > 850 ? -170 : 10))
-                   .attr("y", y + 10);
+                   .style("left", d.pageX + "px")
+                   .style("top", d.pageY + "px")
+                   .style("opacity", 0.9);
         })
-        .on("mouseleave", () => {
-            // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
-            tooltip.style("opacity", 0)
-                   .select("text").remove();
-            tooltip.select("rect").remove();
-        });
 
-    // create tooltip container
-    const tooltip = cSVG.append("g")
-                       .attr("id", "tooltip");
+        // hide tooltip on leave
+        cSVG.on("mouseleave", () => {
+            // Thanks https://stackoverflow.com/questions/44079951/remove-element-in-d3-js for d3 remove()
+            tooltip.style("opacity", 0);            
+        });
 });

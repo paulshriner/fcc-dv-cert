@@ -13,10 +13,17 @@ body {
     white-space: pre-line;
 }
 
-#tooltip rect {
-    fill: black;
-}
-
-#tooltip text {
-    fill: white;
+#tooltip {
+    position: absolute;
+    width: 200px;
+    height: 35px;
+    font-size: 13px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    white-space: pre-line;
+    pointer-events: none;
+    opacity: 0;
 }
