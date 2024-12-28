@@ -29,6 +29,10 @@ const legendSVG = graph.append("svg")
                        .attr("height", lh)
                        .attr("id", "legend");
 
+// create tooltip element
+const tooltip = graph.append("div")
+                     .attr("id", "tooltip");
+
 // Color values for tree map
 // Used https://www.gigacalculator.com/randomizers/random-color-generator.php to generate color values
 const colors = ["#dd66ac", "#19cced", "#188723", "#3572e3", "#d2c1b1", "#f4477b", "#576168", "#de9473", "#f20681", "#250c7f", "#401269", "#d0ccba", "#6e4964", "#62e384", "#26c2c0", "#47ca7d", "#57e610", "#1dbb9f"];
@@ -105,7 +109,7 @@ const renderPage = url => {
             .attr("x", d => d.x0)
             .attr("y", d => d.y0)
             .attr("width", d => d.x1 - d.x0)
-            .attr("height", d => d.y1 - d.y0 )
+            .attr("height", d => d.y1 - d.y0)
             .attr("id", d => d.nodeId = uuidv4())
             .attr("class", "tile")
             .attr("data-name", d => d.data.name)
@@ -149,7 +153,18 @@ const renderPage = url => {
                 }
 
                 return colors[color];
+            })
+            .on("mousemove", (d, i) => {
+                // tooltip will move as cursor moves around blocks
+                tooltip.attr("data-value", i.data.value)
+                       .style("left", d.pageX + "px")
+                       .style("top", d.pageY + "px")
+                       .style("opacity", 0.9)
+                       .text("Name: " + i.data.name + "\nCategory: " + i.data.category + "\nValue: " + i.data.value);
             });
+
+        // hide tooltip on leave
+        tSVG.on("mouseleave", () => tooltip.style("opacity", 0));
 
         // Thanks https://webtips.dev/how-to-make-stunning-data-visualizations-with-d3-js for clipPath
         // This makes it so text cuts off at end of block instead of cutting into other blocks

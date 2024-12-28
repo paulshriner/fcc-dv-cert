@@ -1,0 +1,33 @@
+body {
+    text-align: center;
+}
+
+#graph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#legend {
+    padding-top: 20px;
+    padding-left: 100px;
+}
+
+#tooltip {
+    position: absolute;
+    width: 200px;
+    height: 90px;
+    font-size: 13px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    white-space: pre-line;
+    pointer-events: none;
+    opacity: 0;
+}
+
+text {
+    pointer-events: none;
+}
