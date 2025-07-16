@@ -10,21 +10,31 @@ These are the projects I did in the completion of this certificate.
 
 A bar chart of the United States GDP.
 
+![Image of Project](images/bar-chart.png)
+
 ### Scatterplot Graph
 
 A scatterplot showing times in professional bicycle racing and whether those times were impacted by doping.
+
+![Image of Project](images/scatter-plot.png)
 
 ### Heat Map
 
 A heat map of monthly global land-surface temperature.
 
+![Image of Project](images/heat-map.png)
+
 ### Choropleth Map
 
 A choropleth map of percentages of adults 25 and older with a bachelor's degree or higher in United States counties.
 
+![Image of Project](images/choropleth-map.png)
+
 ### Tree Map
 
 A tree map of video game sales, movie sales, and kickstarter pledges.
+
+![Image of Project](images/tree-map.png)
 
 ## Skills
 - D3.js
